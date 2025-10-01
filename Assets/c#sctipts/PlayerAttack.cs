@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 public class PlayerAttack : MonoBehaviour
@@ -7,6 +8,10 @@ public class PlayerAttack : MonoBehaviour
     public float starttimebtwattack;
     [SerializeField]
     Animator animator;
+
+    public float attackrange= 0.5f;
+    public Transform attackpoint;
+    public LayerMask enemylayer;
     void Start()
     {
         
@@ -23,7 +28,21 @@ public class PlayerAttack : MonoBehaviour
         if (context.performed)
         {
             animator.SetTrigger("Attck");
+            Collider2D[] hitenemies =Physics2D.OverlapCircleAll(attackpoint.position, attackrange, enemylayer);
+            foreach( Collider2D hitenemy in hitenemies)
+            {
+                Debug.Log($"We hit {hitenemy.gameObject.name}");
+            }    
         }
         
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        if (attackpoint == null)
+        {
+            return;
+        }
+        Gizmos.DrawWireSphere(attackpoint.position, attackrange);
     }
 }
